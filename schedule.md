@@ -133,8 +133,6 @@ AFIST = [_A Friendly Introduction to Software Testing_](software-quality-assuran
 * April 16, 4:00 PM @ 208 Cathedral of Learning: [CGI Consulting](https://www.cgi.com/) lecture
   * Speaker: Laks Ranganathan, CGI Partner | Director - Consulting Services, [LinkedIn](https://www.linkedin.com/in/lakshmi-narasimhan-yeri-ranganathan-4b7b874b/)
 
-* Industry Guest Lectures: TBD
-
 ## WEEK 15 (Week of 20 APR)
 
 * Class 1: Midterm 2 review
