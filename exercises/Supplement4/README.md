@@ -3,12 +3,13 @@
   * [Part 1: CI/CD Pipelines](#part-1-cicd-pipelines)
     + [Add Hello World Workflow](#add-hello-world-workflow)
     + [Add Maven CI Workflow](#add-maven-ci-workflow)
-    + [Debug Maven CI Workflow maven_test job](#debug-maven-ci-workflow-maven_test-job)
+    + [View results of Maven CI Workflow maven_test job](#view-results-of-maven-ci-workflow-maven_test-job)
     + [Debug Maven CI Workflow update_dependence_graph job](#debug-maven-ci-workflow-update_dependence_graph-job)
       - [GitHub Caches](#github-caches)
       - [Job Dependencies](#job-dependencies)
       - [Job Permissions](#job-permissions)
     + [Enable Dependabot](#enable-dependabot)
+    + [Add CodeQL TaaS Workflow](#add-codeql-taas-workflow)
     + [Add Maven Publish Workflow](#add-maven-publish-workflow)
     + [Deploy Maven package and use in your Maven project](#deploy-maven-package-and-use-in-your-maven-project)
   * [Part 2: Dockers](#part-2-dockers)
@@ -300,43 +301,43 @@ Going forward, any push or creation of a pull request will trigger this
 workflow.  A pull request is a request to merge a branch into the main trunk
 of the repository and is in that sense also a code integration event.
 
-### Debug Maven CI Workflow maven_test job
+### View results of Maven CI Workflow maven_test job
 
 Now let's click on the failed run link and see exactly which job(s) failed:
 
-<img alt="Maven CI workflow run" src=img/maven_ci_workflow_2.png>
+<img alt="Maven CI workflow first run" src=img/maven_ci_workflow_6.png>
 
-It looks like both of our jobs failed!  Let's first look at the "maven_test"
-job by clicking on it:
+You can see that the "maven_test" job passed, but the "update_dependence_graph"
+job failed.  We will get to failed job soon, but we should be able to view the
+results of the maven_test job since it passed.  So what are the results?  By
+default jobs do not publish any results beyond the green check mark that
+indicates that the job passed.  So what does it mean for a job to have passed?
+It means that every step in the job completely successfully including the "mvn
+test" step.  If "mvn test" suffered a failure, it would have returned a
+none-zero [exit code](https://en.wikipedia.org/wiki/Exit_status)(like all Linux
+processes do), which is detected by the workflow.  So you can be confident that
+all your JUnit tests passed.
 
-<img alt="Maven CI workflow maven_test" src=img/maven_ci_workflow_3.png>
+If a job wants to publish results beyond the green check mark, then it needs to
+create what is called an **artifact**.  You can see in the above maven-ci.yml
+file that the job has a step to create an artifact out of the
+"target/site/jacoco" path that contains Jacoco code coverage analysis results.
+The artifact is available at the bottom of the workflow Summary page you are on
+if you scroll down:
 
-And then let's expand the failing "Test with Maven" step and scroll to the
-end to see what the failure was:
+<img alt="Maven CI workflow artifact" src=img/maven_ci_artifact.png>
 
-<img alt="Maven CI workflow maven_test failure" src=img/maven_ci_workflow_4.png>
-
-You can see that the "mvn test" command failed because of a code coverage
-error from the Jacoco plugin.  This is the same code coverage error we
-suffered in Exercise 2 at the beginning, if you remember.  To solve this
-issue, copy over the "src" directory from your completed Exercise 2 and
-overwrite the existing "src" directory.  Then commit and push your changes.
-This will automatically trigger another CI run:
-
-<img alt="Maven CI workflow second run" src=img/maven_ci_workflow_5.png>
-
-The workflow failed again so let's click on the run to take a look:
-
-<img alt="Maven CI workflow second run" src=img/maven_ci_workflow_6.png>
-
-This time, the "maven_test" job passed, yay!  That means our code passed all
-our JUnit tests with at least 20\% coverage.  
+Click on the "Jacoco coverage results" link and that would download a zip file
+that contains the artifact.  See if you can decompress it and view the code
+coverage results.  Don't be surprised if you see zero coverage because this is
+just the scaffolding code from Exercise 2.  If you replace it with real tests,
+you will see actual coverage.
 
 ### Debug Maven CI Workflow update_dependence_graph job
 
 Now time to look at the still failing "update_dependence_graph" job:
 
-<img alt="Maven CI workflow second run" src=img/maven_ci_workflow_7.png>
+<img alt="Maven CI workflow first run" src=img/maven_ci_workflow_7.png>
 
 Note the phrase "Goal requires a project to execute but there is no POM in
 this directory".  The depgraph Maven plugin needs the pom.xml file to
@@ -613,6 +614,52 @@ vulnerability by [alerting thousands of repositories and creating thousands
 of pull
 requests](https://github.blog/2021-12-14-using-githubs-security-features-identify-log4j-exposure-codebase/).
 
+### Add CodeQL TaaS Workflow
+
+In the software industry, there are a number of companies that provide TaaS
+(Testing-as-a-Service), a type of SaaS (Software-as-a-Service).  These services
+typically perform static testing and code analysis which can be performed
+without knowing the requirements of your software.  These services are easily
+integrated into your CI/CD pipeline through the GitHub Workflow Marketplace.
+We are going to practice integrating a code quality and security analysis tool
+called CodeQL.
+
+On your GitHub repository page:
+
+1. Navigate to "Settings > Advanced Security".
+
+1. Click on the "Explore workflows" button next to the Code Security > Tools >
+Other tools setting.
+
+1. The first workflow that pops up would be "CodeQL Analysis" by GitHub.  If it
+is not, simply search for it.  Click on the "Configure" button for that
+workflow.
+
+1. In the .github/workflows/codeql.yml file generated, uncomment the following line:
+
+   ```
+   queries: security-extended,security-and-quality
+   ```
+
+   For a little bit of background, CodeQL is a code analysis engine developed
+by GitHub (originally by Semmle, which was later acquired by GitHub). It treats
+code as data in a database, upon which you can perform queries in a domain
+specific language called CodeQL similar to SQL to find bugs and security
+vulnerabilities.  By default, the workflow does not perform any queries, so the
+above line has to be uncommented to perform a basic set of queries about
+security and code quality.
+
+1. Now click on "Commit changes".  This will trigger a new workflow due to the
+push trigger on the YAML file.
+
+When the workflow completes, navigate to "Security and quality > Code
+scanning".  You should see a bunch of issues like the below:
+
+<img alt="Results of code scanning" src=img/maven_ci_code_scanning.png>
+
+I am not going to ask you to resolve all those issues as part of this exercise.
+Just peruse each issue type and see what CodeQL is able to provide for you.
+
 ### Add Maven Publish Workflow
 
 Now that we have a robust CI pipeline in place, we are ready to CD
@@ -811,7 +858,7 @@ after you are satisfied.
 
 ## Part 2: Dockers
 
-**GitHub Classroom Link:** https://classroom.github.com/a/PKCmI8Q4
+**GitHub Classroom Link: TBD
 
 In Part 2, we will use Docker to test and deploy the Rent-A-Cat website that
 we tested in Deliverable 3.  We will test the website using the Selenium
