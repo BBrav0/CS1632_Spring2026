@@ -118,7 +118,7 @@ AFIST = [_A Friendly Introduction to Software Testing_](software-quality-assuran
 
 * April 14, 11:00 AM @ MS Teams (Meeting link in Guest Lecture - BNY channel): [Bank of New York (BNY)](https://www.bny.com/) lecture
   * Topic: Agentic AI integration throughout the SDLC
-  * Speaker: Vittal Kommireddy, Director Of Quality Engineering Practice, [LinkedIn](https://www.linkedin.com/in/vittal-kommireddy-a1857621/)
+  * Speaker: Vittal Kommireddy, Director - Software Engineering Practice, [LinkedIn](https://www.linkedin.com/in/vittal-kommireddy-a1857621/)
   * Speaker: Prajita Nair, Sr Vice President, [LinkedIn](https://www.linkedin.com/in/prajita-nair-294b3b249/)
   * Speaker: Kedar Phadke, Full Stack Solutions Architect
     
