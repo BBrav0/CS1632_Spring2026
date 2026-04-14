@@ -120,7 +120,7 @@ AFIST = [_A Friendly Introduction to Software Testing_](software-quality-assuran
   * Topic: Agentic AI integration throughout the SDLC
   * Speaker: Vittal Kommireddy, Director - Software Engineering Practice, [LinkedIn](https://www.linkedin.com/in/vittal-kommireddy-a1857621/)
   * Speaker: Prajita Nair, Sr Vice President, [LinkedIn](https://www.linkedin.com/in/prajita-nair-294b3b249/)
-  * Speaker: Kedar Phadke, Full Stack Solutions Architect
+  * Speaker: Kedar Phadke, Full Stack Solutions Architect, [LinkedIn](https://www.linkedin.com/in/kedarmphadke/)
     
 * April 14, 4:00 PM @ 208 Cathedral of Learning: [Howmet Aerospace](https://www.howmet.com/) lecture
   * Topic: Testing strategies and AI model testing and deployment
